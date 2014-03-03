@@ -791,13 +791,13 @@
 
   <xsl:template match="dcterms:description">
     <p class="description">
-      <xsl:value-of select="."/>
+      <xsl:value-of select="." disable-output-escaping="yes"/>
     </p>
   </xsl:template>
 
   <xsl:template match="rdfs:comment | @rdfs:comment">
     <p class="comment">
-      <xsl:value-of select="."/>
+      <xsl:value-of select="." disable-output-escaping="yes"/>
     </p>
   </xsl:template>
 
