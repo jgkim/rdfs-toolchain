@@ -195,7 +195,19 @@
           </xsl:if>
         </dl>
 
-        <!-- TODO: adms:status -->
+        <xsl:if test="*[@rdf:about=$identifier]/adms:status">
+          <xsl:variable name="status-url" select="*[@rdf:about=$identifier]/adms:status/@rdf:resource"/>
+
+          <p class="status">
+            <xsl:text>This vocabulary is </xsl:text>
+            <em>
+              <xsl:call-template name="Uncapitalize">
+                <xsl:with-param name="text" select="document('ADMS_SKOS_v1.00.rdf')/*/*[@rdf:about=$status-url]/skos:prefLabel"/>
+              </xsl:call-template>
+            </em>
+            <xsl:text>.</xsl:text>
+          </p>
+        </xsl:if>
 
         <xsl:if test="*[@rdf:about=$identifier]/dcterms:rights">
           <p class="rights">
@@ -1141,10 +1153,19 @@
     <xsl:value-of select="concat(translate(substring($text, 1, 1), $lowercase, $uppercase), substring($text, 2))"/>
   </xsl:template>
 
+  <xsl:template name="Uncapitalize">
+    <xsl:param name="text"/>
+
+    <xsl:variable name="uppercase" select="'ABCDEFGHIJKLMNOPQRSTUVWXYZ'"/>
+    <xsl:variable name="lowercase" select="'abcdefghijklmnopqrstuvwxyz'"/>
+
+    <xsl:value-of select="translate($text, $uppercase, $lowercase)"/>
+  </xsl:template>
+
   <xsl:template name="CcTerm">
     <xsl:param name="uri"/>
 
-    <xsl:value-of select="document('http://creativecommons.org/schema.rdf')//*[@rdf:about=$uri]/rdfs:comment"/>
+    <xsl:value-of select="document('http://creativecommons.org/schema.rdf')/*/*[@rdf:about=$uri]/rdfs:comment"/>
     (<a href="{$uri}"><xsl:value-of select="$uri"/></a>)
   </xsl:template>
 
