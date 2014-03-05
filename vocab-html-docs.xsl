@@ -449,17 +449,19 @@
   </xsl:template>
 
   <xsl:template match="rdfs:Class | owl:Class">
+    <xsl:variable name="class-uri" select="@rdf:about"/>
+
     <div class="class">
       <h3>
         <xsl:attribute name="id">
           <xsl:text>term-</xsl:text>
           <xsl:call-template name="TermName">
-            <xsl:with-param name="uri" select="@rdf:about"/>
+            <xsl:with-param name="uri" select="$class-uri"/>
           </xsl:call-template>
         </xsl:attribute>
         <xsl:text>Class: </xsl:text>
         <xsl:call-template name="TermName">
-          <xsl:with-param name="uri" select="@rdf:about"/>
+          <xsl:with-param name="uri" select="$class-uri"/>
         </xsl:call-template>
       </h3>
 
@@ -472,7 +474,7 @@
             <tr>
               <th>URI:</th>
               <td>
-                <xsl:value-of select="@rdf:about"/>
+                <xsl:value-of select="$class-uri"/>
               </td>
             </tr>
 
@@ -499,6 +501,54 @@
                 <th>Alternate Label:</th>
                 <td>
                   <xsl:apply-templates select="skos:altLabel"/>
+                </td>
+              </tr>
+            </xsl:if>
+
+            <xsl:if test="count(/*/*[rdfs:domain/@rdf:resource=$class-uri])&gt;0">
+              <tr>
+                <th>Properties include:</th>
+                <td>
+                  <xsl:for-each select="/*/*[rdfs:domain/@rdf:resource=$class-uri]">
+                    <xsl:if test="count(/*/*[rdfs:domain/@rdf:resource=$class-uri])&gt;1">
+                      <xsl:choose>
+                        <xsl:when test="not(position()=1) and not(position()=last())">
+                          <xsl:text>, </xsl:text>
+                        </xsl:when>
+                        <xsl:when test="position()=last()">
+                          <xsl:text> and </xsl:text>
+                        </xsl:when>
+                      </xsl:choose>
+                    </xsl:if>
+
+                    <xsl:call-template name="MakeTermReference">
+                      <xsl:with-param name="uri" select="@rdf:about"/>
+                    </xsl:call-template>
+                  </xsl:for-each>
+                </td>
+              </tr>
+            </xsl:if>
+
+            <xsl:if test="count(/*/*[rdfs:range/@rdf:resource=$class-uri])&gt;0">
+              <tr>
+                <th>Used with:</th>
+                <td>
+                  <xsl:for-each select="/*/*[rdfs:range/@rdf:resource=$class-uri]">
+                    <xsl:if test="count(/*/*[rdfs:range/@rdf:resource=$class-uri])&gt;1">
+                      <xsl:choose>
+                        <xsl:when test="not(position()=1) and not(position()=last())">
+                          <xsl:text>, </xsl:text>
+                        </xsl:when>
+                        <xsl:when test="position()=last()">
+                          <xsl:text> and </xsl:text>
+                        </xsl:when>
+                      </xsl:choose>
+                    </xsl:if>
+
+                    <xsl:call-template name="MakeTermReference">
+                      <xsl:with-param name="uri" select="@rdf:about"/>
+                    </xsl:call-template>
+                  </xsl:for-each>
                 </td>
               </tr>
             </xsl:if>
@@ -910,7 +960,7 @@
       body * ins, body * del { display: inline; }
 
       table.properties { width: 90%; }
-      table.properties th { text-align: right; width: 9em; font-weight: normal;}
+      table.properties th { text-align: right; width: 10em; font-weight: normal;}
 
       table { border-collapse: collapse;  border: none; font-size: inherit; }
       table thead { border-bottom: solid #999999 2px; }
