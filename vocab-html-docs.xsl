@@ -242,6 +242,10 @@
         <li><a href="#sec-namespace">Namespace</a></li>
       </xsl:if>
 
+      <xsl:if test="count(*[@rdf:about=$identifier]/vann:termGroup)&gt;0">
+        <li><a href="#sec-groups">Terms Grouped by Theme</a></li>
+      </xsl:if>
+
       <li><a href="#sec-terms">Summary of Terms</a></li>
 
       <xsl:if test="count($classes)&gt;0">
@@ -314,6 +318,42 @@
           <xsl:value-of select="$classes[1]/@rdf:about"/>
         </code>
       </pre>
+    </xsl:if>
+
+    <xsl:if test="count(*[@rdf:about=$identifier]/vann:termGroup)&gt;0">
+      <h2 id="sec-groups">Terms Grouped by Theme</h2>
+
+      <ul class="groupList">
+        <xsl:for-each select="*[@rdf:about=$identifier]/vann:termGroup">
+          <xsl:variable name="group" select="@rdf:resource"/>
+          <li>
+            <p class="definition">
+              <strong>
+                <xsl:value-of select="/*/*[@rdf:about=$group]/rdfs:label"/>:
+              </strong>
+              <xsl:value-of select="/*/*[@rdf:about=$group]/rdfs:comment"/>
+            </p>
+            <p>
+              <xsl:for-each select="/*/*[@rdf:about=$group]/*[translate(name(.), '0123456789', '')='_'] | /*/*[@rdf:about=$group]/rdf:li">
+                <xsl:if test="count(/*/*[@rdf:about=$group]/*[translate(name(.), '0123456789', '')='_'] | /*/*[@rdf:about=$group]/rdf:li)&gt;1">
+                  <xsl:choose>
+                    <xsl:when test="not(position()=1) and not(position()=last())">
+                      <xsl:text>, </xsl:text>
+                    </xsl:when>
+                    <xsl:when test="position()=last()">
+                      <xsl:text> and </xsl:text>
+                    </xsl:when>
+                  </xsl:choose>
+                </xsl:if>
+
+                <xsl:call-template name="MakeTermReference">
+                  <xsl:with-param name="uri" select="@rdf:resource"/>
+                </xsl:call-template>
+              </xsl:for-each>
+            </p>
+          </li>
+        </xsl:for-each>
+      </ul>
     </xsl:if>
 
     <h2 id="sec-terms">Summary of Terms</h2>
@@ -970,6 +1010,9 @@
       del { background: maroon; color: white; /* color: maroon; border: solid thin red; padding: 0.3em; line-height: 1.6em; */ text-decoration: line-through; }
       body ins, body del { display: block; }
       body * ins, body * del { display: inline; }
+
+      .groupList li p:first-child { margin: 0; }
+      .groupList li p:first-child + p { margin: 0 1em 1em 1em; }
 
       table.properties { width: 90%; }
       table.properties th { text-align: right; width: 10em; font-weight: normal;}
