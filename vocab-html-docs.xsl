@@ -260,7 +260,7 @@
         </li>
       </xsl:if>
 
-      <xsl:if test="count(*[@rdf:about=$identifier]/vann:example | *[@rdf:about=$identifier]/skos:example)&gt;0">
+      <xsl:if test="count(*[@rdf:about=$identifier]/vann:example)&gt;0">
         <li>
           <a href="#sec-examples">Examples</a>
         </li>
@@ -480,9 +480,9 @@
       </xsl:apply-templates>
     </xsl:if>
 
-    <xsl:if test="*[@rdf:about=$identifier]/vann:example | *[@rdf:about=$identifier]/skos:example">
+    <xsl:if test="*[@rdf:about=$identifier]/vann:example">
       <h2 id="sec-examples">Examples</h2>
-      <xsl:apply-templates select="*[@rdf:about=$identifier]/vann:example | *[@rdf:about=$identifier]/skos:example"/>
+      <xsl:apply-templates select="*[@rdf:about=$identifier]/vann:example"/>
     </xsl:if>
 
     <xsl:if test="*[@rdf:about=$identifier]/cc:license">
@@ -859,19 +859,27 @@
     </xsl:if>
   </xsl:template>
 
-  <xsl:template match="vann:example | skos:example">
+  <xsl:template match="vann:example">
     <div class="example">
       <h3>
         <xsl:choose>
-          <xsl:when test="dcterms:title | @dcterms:title">
-            <xsl:value-of select="dcterms:title | @dcterms:title"/>
+          <xsl:when test="@rdf:resource">
+            <xsl:value-of select="/*/*[@rdf:about=$example-uri]/rdfs:label"/>
           </xsl:when>
           <xsl:otherwise>
-            <xsl:value-of select="document(@rdf:resource)/*[local-name()='html'][1]/*[local-name()='head'][1]/*[local-name()='title'][1]"/>
+            <xsl:value-of select="*/rdfs:label"/>
           </xsl:otherwise>
         </xsl:choose>
       </h3>
-      <xsl:copy-of select="document(@rdf:resource)/*[local-name()='html'][1]/*[local-name()='body'][1]"/>
+
+      <xsl:choose>
+        <xsl:when test="@rdf:resource">
+          <xsl:value-of select="/*/*[@rdf:about=$example-uri]/rdfs:comment" disable-output-escaping="yes"/>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:value-of select="*/rdfs:comment" disable-output-escaping="yes"/>
+        </xsl:otherwise>
+      </xsl:choose>
     </div>
   </xsl:template>
 
