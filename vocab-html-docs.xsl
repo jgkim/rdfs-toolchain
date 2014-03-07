@@ -346,9 +346,17 @@
                   </xsl:choose>
                 </xsl:if>
 
-                <xsl:call-template name="MakeTermReference">
-                  <xsl:with-param name="uri" select="@rdf:resource"/>
-                </xsl:call-template>
+                <xsl:variable name="term-name">
+                  <xsl:call-template name="TermName">
+                    <xsl:with-param name="uri" select="@rdf:resource"/>
+                  </xsl:call-template>
+                </xsl:variable>
+
+                <a>
+                  <xsl:attribute name="href"><xsl:text>#term-</xsl:text><xsl:value-of select="$term-name"/></xsl:attribute>
+                  <xsl:attribute name="title"><xsl:value-of select="@rdf:about"/></xsl:attribute>
+                  <xsl:value-of select="$term-name"/>
+                </a>
               </xsl:for-each>
             </p>
           </li>
