@@ -334,8 +334,8 @@
               <xsl:value-of select="/*/*[@rdf:about=$group]/rdfs:comment"/>
             </p>
             <p>
-              <xsl:for-each select="/*/*[@rdf:about=$group]/*[translate(name(.), '0123456789', '')='_'] | /*/*[@rdf:about=$group]/rdf:li">
-                <xsl:if test="count(/*/*[@rdf:about=$group]/*[translate(name(.), '0123456789', '')='_'] | /*/*[@rdf:about=$group]/rdf:li)&gt;1">
+              <xsl:for-each select="/*/*[@rdf:about=$group]/*[translate(name(.), '0123456789', '')='rdf:_'] | /*/*[@rdf:about=$group]/rdf:li">
+                <xsl:if test="count(/*/*[@rdf:about=$group]/*[translate(name(.), '0123456789', '')='rdf:_'] | /*/*[@rdf:about=$group]/rdf:li)&gt;1">
                   <xsl:choose>
                     <xsl:when test="not(position()=1) and not(position()=last())">
                       <xsl:text>, </xsl:text>
