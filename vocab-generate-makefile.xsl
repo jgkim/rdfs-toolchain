@@ -55,7 +55,7 @@
 
     <xsl:for-each select="*[@rdf:about=$identifier]/dcterms:hasFormat">
       <xsl:variable name="format-uri" select="@rdf:resource"/>
-      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:IMT/rdf:value"/>
+      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:MediaType/rdf:value"/>
         <xsl:if test="$format-type='text/turtle'">
           <xsl:call-template name="RuleRdfToTtl">
             <xsl:with-param name="vocab-version-rdf-filename" select="$vocab-version-rdf-filename"/>
@@ -141,7 +141,7 @@
     <xsl:text>: </xsl:text>
     <xsl:for-each select="*[@rdf:about=$identifier]/dcterms:hasFormat">
       <xsl:variable name="format-uri" select="@rdf:resource"/>
-      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:IMT/rdf:value"/>
+      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:MediaType/rdf:value"/>
         <xsl:if test="$format-type='text/turtle'">
           <xsl:value-of select="$vocab-version-ttl-filename"/>
           <xsl:text> </xsl:text>

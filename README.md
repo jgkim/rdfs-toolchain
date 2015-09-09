@@ -47,10 +47,12 @@ The toolchain uses XSLT which operates at the syntactic level on the RDF schemas
         <dcterms:hasFormat>
           <rdf:Description rdf:about="http://rdfs.co/bevon/0.6/html">
             <dcterms:format>
-              <dcterms:IMT>
+              <dcterms:MediaType>
+                <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
                 <rdf:value>text/html</rdf:value>
                 <rdfs:label xml:lang="en">HTML</rdfs:label>
-              </dcterms:IMT>
+                <rdfs:seeAlso rdf:resource="http://www.iana.org/assignments/media-types/text/html"/>
+              </dcterms:MediaType>
             </dcterms:format>
           </rdf:Description>
         </dcterms:hasFormat>
@@ -58,10 +60,12 @@ The toolchain uses XSLT which operates at the syntactic level on the RDF schemas
         <dcterms:hasFormat>
           <rdf:Description rdf:about="http://rdfs.co/bevon/0.6/rdf">
             <dcterms:format>
-              <dcterms:IMT>
+              <dcterms:MediaType>
+                <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
                 <rdf:value>application/rdf+xml</rdf:value>
                 <rdfs:label xml:lang="en">RDF/XML</rdfs:label>
-              </dcterms:IMT>
+                <rdfs:seeAlso rdf:resource="http://www.iana.org/assignments/media-types/application/rdf+xml"/>
+              </dcterms:MediaType>
             </dcterms:format>
           </rdf:Description>
         </dcterms:hasFormat>
@@ -69,10 +73,12 @@ The toolchain uses XSLT which operates at the syntactic level on the RDF schemas
         <dcterms:hasFormat>
           <rdf:Description rdf:about="http://rdfs.co/bevon/0.6/ttl">
             <dcterms:format>
-              <dcterms:IMT>
+              <dcterms:MediaType>
+                <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
                 <rdf:value>text/turtle</rdf:value>
                 <rdfs:label xml:lang="en">Turtle</rdfs:label>
-              </dcterms:IMT>
+                <rdfs:seeAlso rdf:resource="http://www.iana.org/assignments/media-types/text/turtle"/>
+              </dcterms:MediaType>
             </dcterms:format>
           </rdf:Description>
         </dcterms:hasFormat>

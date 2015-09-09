@@ -20,7 +20,7 @@
     <xsl:text>AddType application/rdf+xml .rdf&#x0a;</xsl:text>
     <xsl:for-each select="*[@rdf:about=$identifier]/dcterms:hasFormat">
       <xsl:variable name="format-uri" select="@rdf:resource"/>
-      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:IMT/rdf:value"/>
+      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:MediaType/rdf:value"/>
         <xsl:if test="$format-type='text/turtle'">
           <xsl:text>AddType text/turtle .ttl&#x0a;</xsl:text>
         </xsl:if>
@@ -69,7 +69,7 @@
     <xsl:text>&#x0a;</xsl:text>
     <xsl:for-each select="*[@rdf:about=$identifier]/dcterms:hasFormat">
       <xsl:variable name="format-uri" select="@rdf:resource"/>
-      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:IMT/rdf:value"/>
+      <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:MediaType/rdf:value"/>
         <xsl:if test="$format-type='text/turtle'">
           <xsl:text>RewriteCond %{HTTP_ACCEPT} text/turtle [OR]&#x0a;</xsl:text>
           <xsl:text>RewriteCond %{HTTP_ACCEPT} application/rdf\+turtle [OR]&#x0a;</xsl:text>

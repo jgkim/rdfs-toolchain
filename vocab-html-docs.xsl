@@ -52,10 +52,12 @@
           <dcterms:hasFormat>
             <rdf:Description rdf:about="&identifier;/html">
               <dcterms:format>
-                <dcterms:IMT>
+                <dcterms:MediaType>
+                  <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
                   <rdf:value>text/html</rdf:value>
                   <rdfs:label xml:lang="en">HTML</rdfs:label>
-                </dcterms:IMT>
+                  <rdfs:seeAlso rdf:resource="http://www.iana.org/assignments/media-types/text/html"/>
+                </dcterms:MediaType>
               </dcterms:format>
             </rdf:Description>
           </dcterms:hasFormat>
@@ -63,10 +65,12 @@
           <dcterms:hasFormat>
             <rdf:Description rdf:about="&identifier;/rdf">
               <dcterms:format>
-                <dcterms:IMT>
+                <dcterms:MediaType>
+                  <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
                   <rdf:value>application/rdf+xml</rdf:value>
                   <rdfs:label xml:lang="en">RDF/XML</rdfs:label>
-                </dcterms:IMT>
+                  <rdfs:seeAlso rdf:resource="http://www.iana.org/assignments/media-types/application/rdf+xml"/>
+                </dcterms:MediaType>
               </dcterms:format>
             </rdf:Description>
           </dcterms:hasFormat>
@@ -74,10 +78,12 @@
           <dcterms:hasFormat>
             <rdf:Description rdf:about="&identifier;/ttl">
               <dcterms:format>
-                <dcterms:IMT>
+                <dcterms:MediaType>
+                  <dcam:memberOf rdf:resource="http://purl.org/dc/terms/IMT"/>
                   <rdf:value>text/turtle</rdf:value>
                   <rdfs:label xml:lang="en">Turtle</rdfs:label>
-                </dcterms:IMT>
+                  <rdfs:seeAlso rdf:resource="http://www.iana.org/assignments/media-types/text/turtle"/>
+                </dcterms:MediaType>
               </dcterms:format>
             </rdf:Description>
           </dcterms:hasFormat>
@@ -127,7 +133,7 @@
         <title><xsl:value-of select="$title"/></title>
         <xsl:for-each select="*[@rdf:about=$identifier]/dcterms:hasFormat">
           <xsl:variable name="format-uri" select="@rdf:resource"/>
-          <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:IMT/rdf:value"/>
+          <xsl:variable name="format-type" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:MediaType/rdf:value"/>
 
           <xsl:if test="not($format-type='text/html') and not($format-type='application/xhtml+xml')">
             <link rel="meta" type="{$format-type}" title="{$title}" href="{$format-uri}"/>
@@ -145,7 +151,7 @@
             <a href="{$identifier}"><xsl:value-of select="$identifier"/></a>
             <xsl:for-each select="*[@rdf:about=$identifier]/dcterms:hasFormat">
               <xsl:variable name="format-uri" select="@rdf:resource"/>
-              <xsl:variable name="format-label" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:IMT/rdfs:label"/>
+              <xsl:variable name="format-label" select="/*/*[@rdf:about=$format-uri]/dcterms:format/dcterms:MediaType/rdfs:label"/>
 
               <xsl:text> [</xsl:text><a href="{$format-uri}"><xsl:value-of select="$format-label"/></a><xsl:text>]</xsl:text>
             </xsl:for-each>
