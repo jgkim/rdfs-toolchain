@@ -12,7 +12,8 @@
   xmlns:status="http://www.w3.org/2003/06/sw-vocab-status/ns#"
   xmlns:dcterms="http://purl.org/dc/terms/"
   xmlns:cc="http://creativecommons.org/ns#"
-  xmlns:foaf="http://xmlns.com/foaf/0.1/">
+  xmlns:foaf="http://xmlns.com/foaf/0.1/"
+  xmlns:org="http://www.w3.org/ns/org#">
 
   <!--
     This stylesheet was originally authored and released by Ian Davis
@@ -268,7 +269,7 @@
 
       <xsl:if test="count(*[@rdf:about=$identifier]/vann:example)&gt;0">
         <li>
-          <a href="#sec-examples">Examples</a>
+          <a href="#sec-examples">Example<xsl:if test="count(*[@rdf:about=$identifier]/vann:example)&gt;1">s</xsl:if></a>
         </li>
       </xsl:if>
 
@@ -487,7 +488,7 @@
     </xsl:if>
 
     <xsl:if test="*[@rdf:about=$identifier]/vann:example">
-      <h2 id="sec-examples">Examples</h2>
+      <h2 id="sec-examples">Example<xsl:if test="count(*[@rdf:about=$identifier]/vann:example)&gt;1">s</xsl:if></h2>
       <xsl:apply-templates select="*[@rdf:about=$identifier]/vann:example"/>
     </xsl:if>
 
@@ -532,7 +533,28 @@
       </h3>
 
       <div class="description">
-        <xsl:apply-templates select="skos:definition"/>
+        <xsl:if test="count(skos:definition)&gt;0">
+          <p class="definition">
+            <xsl:for-each select="skos:definition">
+              <xsl:choose>
+                <xsl:when test="position()=1">
+                  <strong>Definition:</strong>
+                  <xsl:text> </xsl:text>
+                </xsl:when>
+              </xsl:choose>
+              <xsl:value-of select="normalize-space(.)"/>
+              <xsl:if test="@xml:lang">
+                <span class="lang">@<xsl:value-of select="@xml:lang"/></span>
+              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="not(position()=last())">
+                  <br/>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:for-each>
+          </p>
+        </xsl:if>
+
         <xsl:apply-templates select="rdfs:comment | @rdfs:comment"/>
 
         <table class="properties">
@@ -692,7 +714,28 @@
       </h3>
 
       <div class="description">
-        <xsl:apply-templates select="skos:definition"/>
+        <xsl:if test="count(skos:definition)&gt;0">
+          <p class="definition">
+            <xsl:for-each select="skos:definition">
+              <xsl:choose>
+                <xsl:when test="position()=1">
+                  <strong>Definition:</strong>
+                  <xsl:text> </xsl:text>
+                </xsl:when>
+              </xsl:choose>
+              <xsl:value-of select="normalize-space(.)"/>
+              <xsl:if test="@xml:lang">
+                <span class="lang">@<xsl:value-of select="@xml:lang"/></span>
+              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="not(position()=last())">
+                  <br/>
+                </xsl:when>
+              </xsl:choose>
+            </xsl:for-each>
+          </p>
+        </xsl:if>
+
         <xsl:apply-templates select="rdfs:comment | @rdfs:comment"/>
 
         <table class="properties">
@@ -808,14 +851,9 @@
     </xsl:if>
 
     <xsl:value-of select="."/>
-    <span class="lang">@<xsl:value-of select="@xml:lang"/></span>
-  </xsl:template>
-
-  <xsl:template match="skos:definition">
-    <p class="definition">
-      <strong>Definition:</strong>
-      <xsl:value-of select="."/>
-    </p>
+    <xsl:if test="@xml:lang">
+      <span class="lang">@<xsl:value-of select="@xml:lang"/></span>
+    </xsl:if>
   </xsl:template>
 
   <xsl:template match="cc:License">
@@ -925,7 +963,7 @@
     </p>
   </xsl:template>
 
-  <xsl:template match="dcterms:creator | dcterms:contributor">
+  <xsl:template match="dcterms:creator | dcterms:contributor | org:memberOf">
     <xsl:choose>
       <xsl:when test="*/foaf:name">
         <xsl:choose>
@@ -936,6 +974,11 @@
             <xsl:value-of select="*/foaf:name"/>
           </xsl:otherwise>
         </xsl:choose>
+
+        <xsl:if test="*/org:memberOf">
+          <xsl:text>, </xsl:text>
+          <xsl:apply-templates select="*/org:memberOf"/>
+        </xsl:if>
       </xsl:when>
       <xsl:otherwise>
         <xsl:variable name="uri" select="@rdf:resource"/>
@@ -947,6 +990,11 @@
             <xsl:value-of select="/*/*[@rdf:about=$uri]/foaf:name"/>
           </xsl:otherwise>
         </xsl:choose>
+
+        <xsl:if test="/*/*[@rdf:about=$uri]/org:memberOf">
+          <xsl:text>, </xsl:text>
+          <xsl:apply-templates select="/*/*[@rdf:about=$uri]/org:memberOf"/>
+        </xsl:if>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:template>
@@ -1310,6 +1358,10 @@
               <xsl:text>dcterms:</xsl:text>
               <xsl:value-of select="substring-after($uri, 'http://purl.org/dc/terms/')"/>
             </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://schema.org/')">
+              <xsl:text>schema:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://schema.org/')"/>
+            </xsl:when>
             <xsl:when test="starts-with($uri, 'http://creativecommons.org/ns#')">
               <xsl:text>cc:</xsl:text>
               <xsl:value-of select="substring-after($uri, 'http://creativecommons.org/ns#')"/>
@@ -1318,9 +1370,41 @@
               <xsl:text>foaf:</xsl:text>
               <xsl:value-of select="substring-after($uri, 'http://xmlns.com/foaf/0.1/')"/>
             </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://www.w3.org/ns/org#')">
+              <xsl:text>org:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://www.w3.org/ns/org#')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://ontology.eil.utoronto.ca/icontact.owl#')">
+              <xsl:text>ic:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://ontology.eil.utoronto.ca/icontact.owl#')"/>
+            </xsl:when>
             <xsl:when test="starts-with($uri, 'http://www.w3.org/2003/01/geo/wgs84_pos#')">
               <xsl:text>geo:</xsl:text>
               <xsl:value-of select="substring-after($uri, 'http://www.w3.org/2003/01/geo/wgs84_pos#')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://www.opengis.net/ont/geosparql#')">
+              <xsl:text>gsp:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://www.opengis.net/ont/geosparql#')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://geovocab.org/spatial#')">
+              <xsl:text>spatial:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://geovocab.org/spatial#')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://geovocab.org/geometry#')">
+              <xsl:text>ngeo:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://geovocab.org/geometry#')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://www.geonames.org/ontology#')">
+              <xsl:text>gn:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://www.geonames.org/ontology#')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://linkedgeodata.org/ontology/')">
+              <xsl:text>lgdo:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://linkedgeodata.org/ontology/')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://www.w3.org/ns/locn#')">
+              <xsl:text>locn:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://www.w3.org/ns/locn#')"/>
             </xsl:when>
             <xsl:when test="starts-with($uri, 'http://www.w3.org/2006/time#')">
               <xsl:text>time:</xsl:text>
@@ -1341,6 +1425,10 @@
             <xsl:when test="starts-with($uri, 'http://dbpedia.org/class/yago/')">
               <xsl:text>yago:</xsl:text>
               <xsl:value-of select="substring-after($uri, 'http://dbpedia.org/class/yago/')"/>
+            </xsl:when>
+            <xsl:when test="starts-with($uri, 'http://rdfs.co/juso/')">
+              <xsl:text>juso:</xsl:text>
+              <xsl:value-of select="substring-after($uri, 'http://rdfs.co/juso/')"/>
             </xsl:when>
             <xsl:otherwise>
               <xsl:value-of select="$uri"/>
