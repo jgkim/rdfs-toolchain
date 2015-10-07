@@ -91,6 +91,17 @@
     </xsl:if>
     <xsl:text>rdf [R=303,L]&#x0a;</xsl:text>
     <xsl:text>&#x0a;</xsl:text>
+
+    <xsl:text>&lt;Files "html"&gt;&#x0a;</xsl:text>
+    <xsl:text>  ForceType text/html&#x0a;</xsl:text>
+    <xsl:text>&lt;/Files&gt;&#x0a;</xsl:text>
+    <xsl:text>&lt;Files "rdf"&gt;&#x0a;</xsl:text>
+    <xsl:text>  ForceType application/rdf+xml&#x0a;</xsl:text>
+    <xsl:text>&lt;/Files&gt;&#x0a;</xsl:text>
+    <xsl:text>&lt;Files "ttl"&gt;&#x0a;</xsl:text>
+    <xsl:text>  ForceType text/turtle&#x0a;</xsl:text>
+    <xsl:text>&lt;/Files&gt;&#x0a;</xsl:text>
+    <xsl:text>&#x0a;</xsl:text>
   </xsl:template>
 
 </xsl:stylesheet>
